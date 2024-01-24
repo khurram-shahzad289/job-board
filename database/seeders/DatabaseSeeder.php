@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+         \App\Models\User::factory()->create([
+             'name' => 'Khurram Shahzad',
+             'email' => 'khurram@shahzad.com',
+         ]);
+
         \App\Models\User::factory(300)->create();
 
         $users = \App\Models\User::all()->shuffle();
@@ -31,9 +36,17 @@ class DatabaseSeeder extends Seeder
         }
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        foreach ($users as $user){
+            $jobs = \App\Models\Job::inRandomOrder()->take(rand(0, 4))->get();
+
+            foreach ($jobs as $job){
+                \App\Models\JobApplication::factory()->create([
+                    'job_id' => $job->id,
+                    'user_id' => $user->id
+                ]);
+            }
+
+        }
+
     }
 }
